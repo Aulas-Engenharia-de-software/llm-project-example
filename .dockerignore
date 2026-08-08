@@ -1,11 +1,8 @@
-.env
+.git/
 .venv/
 __pycache__/
-*.py[cod]
 .pytest_cache/
-.coverage
-htmlcov/
 .idea/
 .vscode/
+.env
 *.log
-.DS_Store
