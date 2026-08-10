@@ -1,4 +1,4 @@
-from app.application.services import AnswerQuestionService, HandleIncomingMessageService
+from app.application.service.handle_question_service import AnswerQuestionService, HandleIncomingMessageService
 from app.domain.models import Address, IncomingMessage, IntentAction, IntentAnalysis
 
 

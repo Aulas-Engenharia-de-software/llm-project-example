@@ -26,7 +26,6 @@ class MessageResponse(BaseModel):
 
 @router.post("/api/messages", response_model=MessageResponse)
 def receive_message(payload: IncomingMessageRequest, request: Request) -> MessageResponse:
-    """Recebe JSON em vez de um webhook real e executa o fluxo completo."""
     message = IncomingMessage(
         message_id=payload.message_id,
         sender=payload.sender,
@@ -36,6 +35,8 @@ def receive_message(payload: IncomingMessageRequest, request: Request) -> Messag
         result = request.app.state.message_handler.handle(message)
     except RuntimeError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
     return MessageResponse(
         message_id=result.message_id,
         recipient=result.recipient,

@@ -9,9 +9,9 @@ from app.adapters.gemini import GeminiAdapter
 from app.adapters.memory import InMemoryProcessedMessageStore
 from app.adapters.viacep import ViaCepAdapter
 from app.api import router
-from app.application.services import (
-    AnswerQuestionService,
-    HandleIncomingMessageService,
+from app.application.service.handle_incoming_message_service import HandleIncomingMessageService
+from app.application.service.handle_question_service import (
+    AnswerQuestionService
 )
 from app.config import Settings
 

@@ -1,5 +1,3 @@
-"""Portas que isolam a regra de negócio dos detalhes de infraestrutura."""
-
 from typing import Protocol
 
 from app.domain.models import Address, IntentAnalysis
@@ -13,7 +11,7 @@ class LanguageModelPort(Protocol):
     def analyze(self, user_message: str) -> IntentAnalysis: ...
 
     def compose_address_response(
-        self, original_message: str, address: Address
+            self, original_message: str, address: Address
     ) -> str: ...
 
 

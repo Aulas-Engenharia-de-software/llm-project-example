@@ -1,9 +1,7 @@
-"""Casos de uso: responder uma pergunta e tratar uma mensagem recebida."""
-
 import re
 
-from app.domain.models import IncomingMessage, IntentAction, MessageResult
-from app.domain.ports import AddressLookupPort, LanguageModelPort, ProcessedMessageStore
+from app.domain.models import IntentAction
+from app.domain.ports import AddressLookupPort, LanguageModelPort
 
 
 class AnswerQuestionService:
@@ -11,9 +9,9 @@ class AnswerQuestionService:
     MAX_OUTPUT_LENGTH = 3_500
 
     def __init__(
-        self,
-        language_model: LanguageModelPort,
-        address_lookup: AddressLookupPort,
+            self,
+            language_model: LanguageModelPort,
+            address_lookup: AddressLookupPort,
     ) -> None:
         self._language_model = language_model
         self._address_lookup = address_lookup
@@ -24,6 +22,7 @@ class AnswerQuestionService:
 
         if analysis.action is IntentAction.QUERY_CEP:
             return self._answer_cep(safe_question, analysis.cep)
+
         if analysis.action is IntentAction.HELP:
             return self._fallback(
                 analysis.direct_reply,
@@ -67,30 +66,3 @@ class AnswerQuestionService:
         if not text or not text.strip():
             return "Não consegui montar a resposta agora. Tente novamente em instantes."
         return text.strip()[: self.MAX_OUTPUT_LENGTH]
-
-
-class HandleIncomingMessageService:
-    def __init__(
-        self,
-        answer_question: AnswerQuestionService,
-        processed_messages: ProcessedMessageStore,
-    ) -> None:
-        self._answer_question = answer_question
-        self._processed_messages = processed_messages
-
-    def handle(self, message: IncomingMessage) -> MessageResult:
-        if not self._processed_messages.mark_if_new(message.message_id):
-            return MessageResult(
-                message_id=message.message_id,
-                recipient=message.sender,
-                status="duplicate",
-                answer=None,
-            )
-
-        answer = self._answer_question.answer(message.text)
-        return MessageResult(
-            message_id=message.message_id,
-            recipient=message.sender,
-            status="processed",
-            answer=answer,
-        )
